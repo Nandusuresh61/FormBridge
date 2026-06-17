@@ -1,8 +1,8 @@
-import { Survey } from "@/domain/entities/Survey";
-import { ISurveyRepository } from "@/domain/repository/ISurveyRepository";
-import { SurveyModel } from "../database/models/SurveryModel";
+import { Survey } from "../../domain/entities/Survey";
+import { ISurveyRepository } from "../../domain/repository/ISurveyRepository";
+import { SurveyModel } from "../database/models/SurveyModel";
 
-export class SurveryRepository implements ISurveyRepository {
+export class SurveyRepository implements ISurveyRepository {
   async create(survey: Survey): Promise<Survey> {
     const surveyDoc = await SurveyModel.create({
       surveyId: survey.surveyId,
@@ -25,7 +25,7 @@ export class SurveryRepository implements ISurveyRepository {
       surveyDoc.phoneNumber,
       surveyDoc.address,
       surveyDoc.message,
-      surveyDoc.attachmentUrl,
+      surveyDoc.attachmentUrl || undefined,
       surveyDoc.createdAt,
     );
   }
@@ -44,7 +44,7 @@ export class SurveryRepository implements ISurveyRepository {
           survey.phoneNumber,
           survey.address,
           survey.message,
-          survey.attachmentUrl,
+          survey.attachmentUrl || undefined,
           survey.createdAt,
         ),
     );
@@ -68,7 +68,7 @@ export class SurveryRepository implements ISurveyRepository {
       survey.phoneNumber,
       survey.address,
       survey.message,
-      survey.attachmentUrl,
+      survey.attachmentUrl || undefined,
       survey.createdAt,
     );
   }

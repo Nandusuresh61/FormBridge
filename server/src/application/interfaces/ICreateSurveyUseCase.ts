@@ -1,4 +1,4 @@
-import { Survey } from "@/domain/entities/Survey";
+import { Survey } from "../../domain/entities/Survey";
 import { CreateSurveyDto } from "../dto/SurveyDto";
 
 export interface ICreateSurveyUseCase {

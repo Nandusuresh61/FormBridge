@@ -6,7 +6,7 @@ export interface CreateSurveyDto {
   phoneNumber: string;
   address: string;
   message: string;
-  attachmentUrl: string;
+  attachmentUrl?: string;
   recaptchaToken: string;
 }
 

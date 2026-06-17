@@ -1,12 +1,12 @@
-import { Survey } from "@/domain/entities/Survey";
+import { Survey } from "../../domain/entities/Survey";
 import { CreateSurveyDto } from "../dto/SurveyDto";
 import { ICreateSurveyUseCase } from "../interfaces/ICreateSurveyUseCase";
-import { ISurveyRepository } from "@/domain/repository/ISurveyRepository";
+import { ISurveyRepository } from "../../domain/repository/ISurveyRepository";
 import { IRecaptchaVerificationUseCase } from "../interfaces/IRecaptchaVerificationUseCase";
-import { AppError } from "@/shared/errors/AppError";
-import { ErrorCode } from "@/shared/enums/ErrorCode";
-import { AppMessages } from "@/shared/messages/AppMessages";
-import { HttpStatusCode } from "@/shared/enums/StatusCode";
+import { AppError } from "../../shared/errors/AppError";
+import { ErrorCode } from "../../shared/enums/ErrorCode";
+import { AppMessages } from "../../shared/messages/AppMessages";
+import { HttpStatusCode } from "../../shared/enums/StatusCode";
 import { randomUUID } from "crypto";
 
 export class CreateSurveyUseCase implements ICreateSurveyUseCase {
