@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use("/api/surveys", surveyRoutes);
 
-// Error handling middleware (must be after routes)
+// Error handling middleware
 app.use(errorMiddleware);
 
 export default app;
