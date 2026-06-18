@@ -1,19 +1,19 @@
-import express from "express";
-import cors from "cors";
-import surveyRoutes from "./presentation/routes/SurveyRoutes";
-import { errorMiddleware } from "./presentation/middlewares/errorMiddleware";
+import "dotenv/config";
+import { Appconfig } from "./config/AppConfig";
+import { connectDB } from "./infrastructure/database/connectDB";
+import app from "./app";
 
-const app = express();
+const startServer = async () => {
+  const { PORT } = Appconfig;
 
-// Global Middlewares
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+  await connectDB();
 
-// API Routes
-app.use("/api/surveys", surveyRoutes);
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+};
 
-// Error handling middleware (must be after routes)
-app.use(errorMiddleware);
-
-export default app;
+startServer().catch((error) => {
+  console.error("FATAL: Failed to start the server:", error);
+  process.exit(1);
+});
