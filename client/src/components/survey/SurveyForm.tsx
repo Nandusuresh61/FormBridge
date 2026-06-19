@@ -378,23 +378,25 @@ export const SurveyForm = () => {
                 </div>
 
                 {/* Action Submit Dispatch Trigger */}
-                <Button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:via-indigo-800 hover:to-violet-800 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/15 hover:shadow-indigo-600/25 border-0 flex items-center justify-center space-x-2 transition-all duration-300 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                      <span>Submitting response...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Submit Form Response</span>
-                      <Send className="w-4 h-4 ml-1" />
-                    </>
-                  )}
-                </Button>
+                {recaptchaToken && (
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:via-indigo-800 hover:to-violet-800 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/15 hover:shadow-indigo-600/25 border-0 flex items-center justify-center space-x-2 transition-all duration-300 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none animate-in fade-in slide-in-from-bottom-2 duration-300"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                        <span>Submitting response...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Submit Form Response</span>
+                        <Send className="w-4 h-4 ml-1" />
+                      </>
+                    )}
+                  </Button>
+                )}
               </form>
             )}
           </CardContent>
