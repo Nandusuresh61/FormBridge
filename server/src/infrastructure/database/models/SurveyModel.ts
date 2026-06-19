@@ -46,12 +46,14 @@ const surveySchema = new Schema<SurveySchemaType>(
       required: true,
       trim: true,
       lowercase: true,
+      unique: true,
     },
 
     phoneNumber: {
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
 
     address: {

@@ -72,4 +72,50 @@ export class SurveyRepository implements ISurveyRepository {
       survey.createdAt,
     );
   }
+
+  async findByEmail(email: string): Promise<Survey | null> {
+    const survey = await SurveyModel.findOne({
+      email: email.toLowerCase(),
+    }).lean();
+
+    if (!survey) {
+      return null;
+    }
+
+    return new Survey(
+      survey.surveyId,
+      survey.name,
+      survey.gender,
+      survey.nationality,
+      survey.email,
+      survey.phoneNumber,
+      survey.address,
+      survey.message,
+      survey.attachmentUrl || undefined,
+      survey.createdAt,
+    );
+  }
+
+  async findByPhoneNumber(phoneNumber: string): Promise<Survey | null> {
+    const survey = await SurveyModel.findOne({
+      phoneNumber,
+    }).lean();
+
+    if (!survey) {
+      return null;
+    }
+
+    return new Survey(
+      survey.surveyId,
+      survey.name,
+      survey.gender,
+      survey.nationality,
+      survey.email,
+      survey.phoneNumber,
+      survey.address,
+      survey.message,
+      survey.attachmentUrl || undefined,
+      survey.createdAt,
+    );
+  }
 }

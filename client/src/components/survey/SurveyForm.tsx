@@ -22,12 +22,9 @@ import {
   Phone, 
   MapPin, 
   MessageSquare, 
-  Upload, 
-  Shield, 
-  CheckCircle2, 
-  FileText,
   Send,
-  Loader2
+  Loader2,
+  Check
 } from "lucide-react";
 
 import { getCountryDataList, getEmojiFlag } from "countries-list";
@@ -54,9 +51,11 @@ const phonePrefixes = getCountryDataList()
 export const SurveyForm = () => {
   const [recaptchaToken, setRecaptchaToken] = useState("");
   const [phonePrefix, setPhonePrefix] = useState("+91");
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<SurveyFormValues>({
     resolver: zodResolver(surveySchema),
@@ -71,6 +70,7 @@ export const SurveyForm = () => {
       };
       await createSurvey(combinedData);
       toast.success("Survey submitted successfully!");
+      setIsSubmitted(true);
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to submit survey. Please try again.");
     }
@@ -112,330 +112,291 @@ export const SurveyForm = () => {
                   Please take a few moments to provide your information. Your verified insights help build better dashboard interfaces and optimize processing loops.
                 </p>
               </div>
-
-              {/* Stepper / Features list */}
-              <div className="space-y-6 pt-4">
-                <div className="flex items-start space-x-3.5 group">
-                  <div className="mt-1 h-7 w-7 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 group-hover:border-indigo-500/30 transition-all duration-200">
-                    <CheckCircle2 className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-slate-200">Instant Field Validation</h4>
-                    <p className="text-xs text-slate-400/90 mt-0.5">Real-time validation secures exact formatting before submission.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3.5 group">
-                  <div className="mt-1 h-7 w-7 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/30 transition-all duration-200">
-                    <Shield className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-slate-200">Secure Transmission</h4>
-                    <p className="text-xs text-slate-400/90 mt-0.5">Protected with client-side reCAPTCHA anti-bot validation.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3.5 group">
-                  <div className="mt-1 h-7 w-7 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 group-hover:bg-violet-500/20 group-hover:border-violet-500/30 transition-all duration-200">
-                    <FileText className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-slate-200">Direct Storage Node</h4>
-                    <p className="text-xs text-slate-400/90 mt-0.5">Responses are indexed directly into server datastores.</p>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Premium Indicator Footer */}
             <div className="relative z-10 pt-6 border-t border-slate-800/60 hidden lg:flex items-center justify-between text-xs text-slate-500">
               <span>© 2026 FormBridge System</span>
-              <div className="flex items-center space-x-1.5 text-indigo-400/95 font-medium">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span>Secure SSL Line</span>
-              </div>
             </div>
           </div>
 
           {/* Right Panel: Clean Form Fields Layout */}
           <CardContent className="lg:col-span-7 xl:col-span-8 p-6 sm:p-10 lg:p-12 bg-white flex flex-col justify-center">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-              
-              {/* Form Segment 1: Personal Attributes */}
-              <div className="space-y-5">
-                <div className="flex items-center space-x-2.5 pb-2.5 border-b border-slate-100">
-                  <span className="h-5 w-5 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] font-extrabold uppercase">
-                    01
-                  </span>
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Personal Identity</h3>
+            {isSubmitted ? (
+              <div className="flex flex-col items-center justify-center text-center space-y-6 py-12 px-4 animate-in fade-in zoom-in duration-300">
+                <div className="h-16 w-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shadow-sm shadow-emerald-500/10">
+                  <Check className="h-8 w-8" />
                 </div>
-
-                <div className="grid sm:grid-cols-2 gap-6">
-                  {/* Full Name */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Full Name *</label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <User className="h-4 w-4" />
-                      </span>
-                      <Input 
-                        {...register("name")} 
-                        placeholder="Enter your full name" 
-                        className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.name ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
-                      />
-                    </div>
-                    {errors.name && (
-                      <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
-                        <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
-                        {errors.name.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Email Address */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Email Address *</label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <Mail className="h-4 w-4" />
-                      </span>
-                      <Input
-                        type="email"
-                        {...register("email")}
-                        placeholder="Enter your email"
-                        className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.email ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
-                      />
-                    </div>
-                    {errors.email && (
-                      <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
-                        <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
-                        {errors.email.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Gender */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Gender *</label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <HelpCircle className="h-4 w-4" />
-                      </span>
-                      <select
-                        {...register("gender")}
-                        className={`w-full h-11 border border-slate-200/80 rounded-xl bg-slate-50/40 hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 pl-10 pr-10 text-sm appearance-none cursor-pointer transition-all duration-200 ${errors.gender ? 'border-red-300 bg-red-50/10 focus:ring-red-500/5' : ''}`}
-                      >
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
-                    {errors.gender && (
-                      <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
-                        <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
-                        {errors.gender.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Nationality */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Nationality *</label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <Globe className="h-4 w-4" />
-                      </span>
-                      <select
-                        {...register("nationality")}
-                        className={`w-full h-11 border border-slate-200/80 rounded-xl bg-slate-50/40 hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 pl-10 pr-10 text-sm appearance-none cursor-pointer transition-all duration-200 ${errors.nationality ? 'border-red-300 bg-red-50/10 focus:ring-red-500/5' : ''}`}
-                      >
-                        <option value="">Select Country</option>
-                        {countries.map((country) => (
-                          <option key={country} value={country}>
-                            {country}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
-                    {errors.nationality && (
-                      <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
-                        <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
-                        {errors.nationality.message}
-                      </p>
-                    )}
-                  </div>
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Survey Submitted Successfully!</h2>
+                  <p className="text-slate-500 text-sm max-w-md leading-relaxed">
+                    Thank you for sharing your feedback and information. We have successfully recorded your response in our secure datastore.
+                  </p>
                 </div>
+                <Button
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    setRecaptchaToken("");
+                    reset();
+                  }}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200"
+                >
+                  Submit Another Response
+                </Button>
               </div>
+            ) : (
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                
+                {/* Form Segment 1: Personal Attributes */}
+                <div className="space-y-5">
+                  <div className="flex items-center space-x-2.5 pb-2.5 border-b border-slate-100">
+                    <span className="h-5 w-5 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] font-extrabold uppercase">
+                      01
+                    </span>
+                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Personal Identity</h3>
+                  </div>
 
-              {/* Form Segment 2: Localization Information */}
-              <div className="space-y-5">
-                <div className="flex items-center space-x-2.5 pb-2.5 border-b border-slate-100">
-                  <span className="h-5 w-5 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] font-extrabold uppercase">
-                    02
-                  </span>
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Communication Nodes</h3>
-                </div>
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {/* Full Name */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Full Name *</label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <User className="h-4 w-4" />
+                        </span>
+                        <Input 
+                          {...register("name")} 
+                          placeholder="Enter your full name" 
+                          className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.name ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
+                        />
+                      </div>
+                      {errors.name && (
+                        <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
+                          <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                          {errors.name.message}
+                        </p>
+                      )}
+                    </div>
 
-                <div className="grid sm:grid-cols-2 gap-6">
-                  {/* Phone Number */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Phone Number *</label>
-                    <div className={`relative flex rounded-xl border bg-slate-50/40 focus-within:ring-4 focus-within:ring-indigo-500/5 focus-within:border-indigo-500 focus-within:bg-white hover:border-slate-300 transition-all duration-200 overflow-hidden ${errors.phoneNumber ? 'border-red-300 bg-red-50/10 focus-within:ring-red-500/5' : 'border-slate-200/80'}`}>
-                      
-                      {/* Prefix Selector */}
-                      <div className="relative flex items-center border-r border-slate-200/80 bg-slate-50/50">
+                    {/* Email Address */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Email Address *</label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <Mail className="h-4 w-4" />
+                        </span>
+                        <Input
+                          type="email"
+                          {...register("email")}
+                          placeholder="Enter your email"
+                          className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.email ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
+                        />
+                      </div>
+                      {errors.email && (
+                        <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
+                          <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                          {errors.email.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Gender */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Gender *</label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <HelpCircle className="h-4 w-4" />
+                        </span>
                         <select
-                          value={phonePrefix}
-                          onChange={(e) => setPhonePrefix(e.target.value)}
-                          className="h-11 pl-3 pr-8 bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer appearance-none"
+                          {...register("gender")}
+                          className={`w-full h-11 border border-slate-200/80 rounded-xl bg-slate-50/40 hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 pl-10 pr-10 text-sm appearance-none cursor-pointer transition-all duration-200 ${errors.gender ? 'border-red-300 bg-red-50/10 focus:ring-red-500/5' : ''}`}
                         >
-                          {phonePrefixes.map((prefix) => (
-                            <option key={`${prefix.iso2}-${prefix.code}`} value={prefix.code}>
-                              {prefix.emoji} {prefix.code} ({prefix.iso2})
+                          <option value="">Select Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                      {errors.gender && (
+                        <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
+                          <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                          {errors.gender.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Nationality */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Nationality *</label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <Globe className="h-4 w-4" />
+                        </span>
+                        <select
+                          {...register("nationality")}
+                          className={`w-full h-11 border border-slate-200/80 rounded-xl bg-slate-50/40 hover:bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 pl-10 pr-10 text-sm appearance-none cursor-pointer transition-all duration-200 ${errors.nationality ? 'border-red-300 bg-red-50/10 focus:ring-red-500/5' : ''}`}
+                        >
+                          <option value="">Select Country</option>
+                          {countries.map((country) => (
+                            <option key={country} value={country}>
+                              {country}
                             </option>
                           ))}
                         </select>
-                        <span className="absolute right-2.5 pointer-events-none text-slate-400">
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                           </svg>
-                        </span>
+                        </div>
                       </div>
-
-                      {/* Base Input */}
-                      <div className="relative flex-1 flex items-center">
-                        <span className="absolute left-3.5 pointer-events-none text-slate-400">
-                          <Phone className="h-4 w-4" />
-                        </span>
-                        <input
-                          type="tel"
-                          {...register("phoneNumber")}
-                          placeholder="Enter phone number"
-                          className="w-full h-11 pl-10 pr-4 bg-transparent outline-none border-none text-sm placeholder:text-slate-400 text-slate-800 focus:ring-0 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    {errors.phoneNumber && (
-                      <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
-                        <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
-                        {errors.phoneNumber.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Address */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Address *</label>
-                    <div className="relative">
-                      <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <MapPin className="h-4 w-4" />
-                      </span>
-                      <Input 
-                        {...register("address")} 
-                        placeholder="Enter address" 
-                        className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.address ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
-                      />
-                    </div>
-                    {errors.address && (
-                      <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
-                        <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
-                        {errors.address.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Message */}
-                  <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Message *</label>
-                    <div className="relative">
-                      <span className="absolute top-3.5 left-3.5 text-slate-400">
-                        <MessageSquare className="h-4 w-4" />
-                      </span>
-                      <Textarea
-                        {...register("message")}
-                        placeholder="Enter your detailed message here..."
-                        rows={4}
-                        className={`pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 min-h-[100px] transition-all duration-200 ${errors.message ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
-                      />
-                    </div>
-                    {errors.message && (
-                      <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
-                        <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
-                        {errors.message.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* File Upload Attachment Dropzone */}
-                  <div className="sm:col-span-2 space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">
-                      Attachment (Optional)
-                    </label>
-                    <div className="relative group rounded-xl border-2 border-dashed border-slate-200/80 bg-slate-50/30 hover:bg-indigo-50/10 hover:border-indigo-500/40 transition-all duration-200 p-6 flex flex-col items-center justify-center cursor-pointer">
-                      <div className="h-10 w-10 rounded-full bg-slate-100 group-hover:bg-indigo-100/80 flex items-center justify-center transition-all duration-200 mb-2">
-                        <Upload className="h-5 w-5 text-slate-500 group-hover:text-indigo-600 transition-all duration-200" />
-                      </div>
-                      <span className="text-xs font-medium text-slate-600 group-hover:text-indigo-600 transition-all duration-200 mb-1">
-                        Click or drag files to upload
-                      </span>
-                      <span className="text-[10px] text-slate-400">
-                        Supports PDF, PNG, JPG or JPEG (Max. 5MB)
-                      </span>
-                      <Input 
-                        type="file" 
-                        accept=".jpg,.jpeg,.png,.pdf" 
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      />
-                    </div>
-                  </div>
-
-                  {/* reCAPTCHA Block */}
-                  <div className="sm:col-span-2 pt-2">
-                    <div className="border border-slate-200/80 rounded-xl p-4 flex justify-center bg-slate-50/50 backdrop-blur-sm shadow-inner shadow-slate-100">
-                      <ReCAPTCHA
-                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                        onChange={(token: any) => {
-                          setRecaptchaToken(token)
-                        }}
-                      />
+                      {errors.nationality && (
+                        <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
+                          <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                          {errors.nationality.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Action Submit Dispatch Trigger */}
-              <Button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:via-indigo-800 hover:to-violet-800 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/15 hover:shadow-indigo-600/25 border-0 flex items-center justify-center space-x-2 transition-all duration-300 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                    <span>Submitting response...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Submit Form Response</span>
-                    <Send className="w-4 h-4 ml-1" />
-                  </>
-                )}
-              </Button>
-            </form>
+                {/* Form Segment 2: Localization Information */}
+                <div className="space-y-5">
+                  <div className="flex items-center space-x-2.5 pb-2.5 border-b border-slate-100">
+                    <span className="h-5 w-5 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center text-[10px] font-extrabold uppercase">
+                      02
+                    </span>
+                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Communication Nodes</h3>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {/* Phone Number */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Phone Number *</label>
+                      <div className={`relative flex rounded-xl border bg-slate-50/40 focus-within:ring-4 focus-within:ring-indigo-500/5 focus-within:border-indigo-500 focus-within:bg-white hover:border-slate-300 transition-all duration-200 overflow-hidden ${errors.phoneNumber ? 'border-red-300 bg-red-50/10 focus-within:ring-red-500/5' : 'border-slate-200/80'}`}>
+                        
+                        {/* Prefix Selector */}
+                        <div className="relative flex items-center border-r border-slate-200/80 bg-slate-50/50">
+                          <select
+                            value={phonePrefix}
+                            onChange={(e) => setPhonePrefix(e.target.value)}
+                            className="h-11 pl-3 pr-8 bg-transparent text-sm font-medium text-slate-700 focus:outline-none cursor-pointer appearance-none"
+                          >
+                            {phonePrefixes.map((prefix) => (
+                              <option key={`${prefix.iso2}-${prefix.code}`} value={prefix.code}>
+                                {prefix.emoji} {prefix.code} ({prefix.iso2})
+                              </option>
+                            ))}
+                          </select>
+                          <span className="absolute right-2.5 pointer-events-none text-slate-400">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </span>
+                        </div>
+
+                        {/* Base Input */}
+                        <div className="relative flex-1 flex items-center">
+                          <span className="absolute left-3.5 pointer-events-none text-slate-400">
+                            <Phone className="h-4 w-4" />
+                          </span>
+                          <input
+                            type="tel"
+                            {...register("phoneNumber")}
+                            placeholder="Enter phone number"
+                            className="w-full h-11 pl-10 pr-4 bg-transparent outline-none border-none text-sm placeholder:text-slate-400 text-slate-800 focus:ring-0 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+                      {errors.phoneNumber && (
+                        <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
+                          <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                          {errors.phoneNumber.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Address */}
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Address *</label>
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                          <MapPin className="h-4 w-4" />
+                        </span>
+                        <Input 
+                          {...register("address")} 
+                          placeholder="Enter address" 
+                          className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.address ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
+                        />
+                      </div>
+                      {errors.address && (
+                        <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
+                          <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                          {errors.address.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Message */}
+                    <div className="sm:col-span-2 space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Message *</label>
+                      <div className="relative">
+                        <span className="absolute top-3.5 left-3.5 text-slate-400">
+                          <MessageSquare className="h-4 w-4" />
+                        </span>
+                        <Textarea
+                          {...register("message")}
+                          placeholder="Enter your detailed message here..."
+                          rows={4}
+                          className={`pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 min-h-[100px] transition-all duration-200 ${errors.message ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
+                        />
+                      </div>
+                      {errors.message && (
+                        <p className="text-xs font-medium text-red-500 mt-1.5 flex items-center gap-1">
+                          <span className="inline-block w-1 h-1 rounded-full bg-red-500" />
+                          {errors.message.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* reCAPTCHA Block */}
+                    <div className="sm:col-span-2 pt-2">
+                      <div className="border border-slate-200/80 rounded-xl p-4 flex justify-center bg-slate-50/50 backdrop-blur-sm shadow-inner shadow-slate-100">
+                        <ReCAPTCHA
+                          sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                          onChange={(token: any) => {
+                            setRecaptchaToken(token)
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Submit Dispatch Trigger */}
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:via-indigo-800 hover:to-violet-800 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/15 hover:shadow-indigo-600/25 border-0 flex items-center justify-center space-x-2 transition-all duration-300 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                      <span>Submitting response...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Submit Form Response</span>
+                      <Send className="w-4 h-4 ml-1" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            )}
           </CardContent>
 
         </div>

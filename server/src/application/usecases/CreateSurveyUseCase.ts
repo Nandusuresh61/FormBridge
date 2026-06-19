@@ -25,6 +25,26 @@ export class CreateSurveyUseCase implements ICreateSurveyUseCase {
       );
     }
 
+    // Check for duplicate submission by email
+    const existingEmail = await this._surveyRepo.findByEmail(data.email);
+    if (existingEmail) {
+      throw new AppError(
+        ErrorCode.SURVEY,
+        AppMessages.EMAIL_EXISTS,
+        HttpStatusCode.BAD_REQUEST,
+      );
+    }
+
+    // Check for duplicate submission by phone number
+    const existingPhone = await this._surveyRepo.findByPhoneNumber(data.phoneNumber);
+    if (existingPhone) {
+      throw new AppError(
+        ErrorCode.SURVEY,
+        AppMessages.PHONE_EXISTS,
+        HttpStatusCode.BAD_REQUEST,
+      );
+    }
+
     const survey = new Survey(
       randomUUID(),
       data.name,
