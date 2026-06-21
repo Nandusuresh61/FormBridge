@@ -1,4 +1,4 @@
-import { IRecaptchaVerificationUseCase } from "../../application/interfaces/IRecaptchaVerificationUseCase";
+import { IRecaptchaVerificationUseCase } from "../../application/interfaces/service/IRecaptchaVerificationUseCase";
 import axios from "axios";
 import { Appconfig } from "../../config/AppConfig";
 

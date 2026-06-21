@@ -1,8 +1,8 @@
 import { Survey } from "../../domain/entities/Survey";
 import { CreateSurveyDto } from "../dto/SurveyDto";
-import { ICreateSurveyUseCase } from "../interfaces/ICreateSurveyUseCase";
+import { ICreateSurveyUseCase } from "../interfaces/usecase/ICreateSurveyUseCase";
 import { ISurveyRepository } from "../../domain/repository/ISurveyRepository";
-import { IRecaptchaVerificationUseCase } from "../interfaces/IRecaptchaVerificationUseCase";
+import { IRecaptchaVerificationUseCase } from "../interfaces/service/IRecaptchaVerificationUseCase";
 import { AppError } from "../../shared/errors/AppError";
 import { ErrorCode } from "../../shared/enums/ErrorCode";
 import { AppMessages } from "../../shared/messages/AppMessages";
