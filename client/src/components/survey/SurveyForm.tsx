@@ -14,14 +14,14 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { createSurvey } from "@/services/survey/survey.api";
 import { useState } from "react";
 import { toast } from "sonner";
-import { 
-  User, 
-  Mail, 
-  HelpCircle, 
-  Globe, 
-  Phone, 
-  MapPin, 
-  MessageSquare, 
+import {
+  User,
+  Mail,
+  HelpCircle,
+  Globe,
+  Phone,
+  MapPin,
+  MessageSquare,
   Send,
   Loader2,
   Check
@@ -43,7 +43,7 @@ const phonePrefixes = getCountryDataList()
     emoji: getEmojiFlag(c.iso2),
     iso2: c.iso2,
   }))
-  .filter((prefix, index, self) => 
+  .filter((prefix, index, self) =>
     self.findIndex(p => p.code === prefix.code && p.emoji === prefix.emoji) === index
   )
   .sort((a, b) => a.name.localeCompare(b.name));
@@ -80,7 +80,7 @@ export const SurveyForm = () => {
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/40 via-slate-50 to-indigo-50/30 py-8 px-4 sm:px-6 lg:px-8 xl:py-16 flex items-center justify-center font-sans antialiased">
       <Card className="max-w-7xl w-full mx-auto overflow-hidden border border-slate-200/60 shadow-[0_32px_60px_-15px_rgba(99,102,241,0.08)] bg-white rounded-3xl transition-all duration-300 hover:shadow-[0_40px_80px_-15px_rgba(99,102,241,0.12)]">
         <div className="grid lg:grid-cols-12 min-h-[750px]">
-          
+
           {/* Left Panel: Hero Graphic & Context Branding */}
           <div className="lg:col-span-5 xl:col-span-4 bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 p-8 lg:p-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-slate-800">
             {/* Ambient Background Radial Glow Blur */}
@@ -146,7 +146,7 @@ export const SurveyForm = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-                
+
                 {/* Form Segment 1: Personal Attributes */}
                 <div className="space-y-5">
                   <div className="flex items-center space-x-2.5 pb-2.5 border-b border-slate-100">
@@ -164,9 +164,9 @@ export const SurveyForm = () => {
                         <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                           <User className="h-4 w-4" />
                         </span>
-                        <Input 
-                          {...register("name")} 
-                          placeholder="Enter your full name" 
+                        <Input
+                          {...register("name")}
+                          placeholder="Enter your full name"
                           className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.name ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
                         />
                       </div>
@@ -278,7 +278,7 @@ export const SurveyForm = () => {
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Phone Number *</label>
                       <div className={`relative flex rounded-xl border bg-slate-50/40 focus-within:ring-4 focus-within:ring-indigo-500/5 focus-within:border-indigo-500 focus-within:bg-white hover:border-slate-300 transition-all duration-200 overflow-hidden ${errors.phoneNumber ? 'border-red-300 bg-red-50/10 focus-within:ring-red-500/5' : 'border-slate-200/80'}`}>
-                        
+
                         {/* Prefix Selector */}
                         <div className="relative flex items-center border-r border-slate-200/80 bg-slate-50/50">
                           <select
@@ -327,9 +327,9 @@ export const SurveyForm = () => {
                         <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                           <MapPin className="h-4 w-4" />
                         </span>
-                        <Input 
-                          {...register("address")} 
-                          placeholder="Enter address" 
+                        <Input
+                          {...register("address")}
+                          placeholder="Enter address"
                           className={`h-11 pl-10 bg-slate-50/40 border-slate-200/80 rounded-xl focus-visible:ring-4 focus-visible:ring-indigo-500/5 focus-visible:border-indigo-500 focus-visible:bg-white hover:bg-slate-50/80 hover:border-slate-300 transition-all duration-200 ${errors.address ? 'border-red-300 bg-red-50/10 focus-visible:border-red-500 focus-visible:ring-red-500/5' : ''}`}
                         />
                       </div>
@@ -378,25 +378,23 @@ export const SurveyForm = () => {
                 </div>
 
                 {/* Action Submit Dispatch Trigger */}
-                {recaptchaToken && (
-                  <Button 
-                    type="submit" 
-                    disabled={isSubmitting}
-                    className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:via-indigo-800 hover:to-violet-800 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/15 hover:shadow-indigo-600/25 border-0 flex items-center justify-center space-x-2 transition-all duration-300 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none animate-in fade-in slide-in-from-bottom-2 duration-300"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                        <span>Submitting response...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Submit Form Response</span>
-                        <Send className="w-4 h-4 ml-1" />
-                      </>
-                    )}
-                  </Button>
-                )}
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-12 bg-gradient-to-r from-indigo-600 via-indigo-700 to-violet-700 hover:from-indigo-700 hover:via-indigo-800 hover:to-violet-800 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/15 hover:shadow-indigo-600/25 border-0 flex items-center justify-center space-x-2 transition-all duration-300 transform active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                      <span>Submitting response...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Submit Form Response</span>
+                      <Send className="w-4 h-4 ml-1" />
+                    </>
+                  )}
+                </Button>
               </form>
             )}
           </CardContent>
