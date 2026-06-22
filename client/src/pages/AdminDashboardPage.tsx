@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAdminStore } from "../store/adminStore";
 import { adminApi } from "../services/Admin/admin.api";
 import type { Submission } from "../types/admin.types";
@@ -60,7 +60,7 @@ export default function AdminDashboardPage() {
   }, [search]);
 
   // Fetch Submissions
-  const fetchSubmissions = async () => {
+  const fetchSubmissions = useCallback(async () => {
     setLoading(true);
     try {
       const response = await adminApi.getSubmissions({
@@ -79,17 +79,28 @@ export default function AdminDashboardPage() {
       } else {
         toast.error(response.message || "Failed to fetch submissions");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Fetch submissions error", error);
-      toast.error(error.message || "Failed to fetch submissions");
+      const message = error instanceof Error ? error.message : "Failed to fetch submissions";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, debouncedSearch, gender, nationality, sortBy, sortOrder]);
 
   useEffect(() => {
-    fetchSubmissions();
-  }, [page, limit, debouncedSearch, gender, nationality, sortBy, sortOrder]);
+    let active = true;
+    const load = async () => {
+      // Defer state update to next microtask tick to avoid calling setState synchronously during render phase
+      await Promise.resolve();
+      if (!active) return;
+      fetchSubmissions();
+    };
+    load();
+    return () => {
+      active = false;
+    };
+  }, [fetchSubmissions]);
 
   const handleGenderChange = (value: string) => {
     setGender(value);

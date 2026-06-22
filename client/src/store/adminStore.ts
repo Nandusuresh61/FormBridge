@@ -29,9 +29,10 @@ export const useAdminStore = create<AdminState>((set) => ({
       } else {
         throw new Error(response.message || "Login failed");
       }
-    } catch (error: any) {
+    } catch (error) {
       set({ isLoading: false });
-      throw new Error(error.response?.data?.message || error.message || "Login failed");
+      const err = error as { response?: { data?: { message?: string } }; message?: string };
+      throw new Error(err.response?.data?.message || err.message || "Login failed", { cause: error });
     }
   },
 
@@ -67,7 +68,7 @@ export const useAdminStore = create<AdminState>((set) => ({
           isLoading: false,
         });
       }
-    } catch (error) {
+    } catch {
       set({
         admin: null,
         isAuthenticated: false,

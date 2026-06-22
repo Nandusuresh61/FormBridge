@@ -53,7 +53,7 @@ export default function SubmissionDetailModal({
         setTimeout(() => setCopiedPhone(false), 2000);
       }
       toast.success(`${type === "email" ? "Email" : "Phone number"} copied to clipboard!`);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy text");
     }
   };

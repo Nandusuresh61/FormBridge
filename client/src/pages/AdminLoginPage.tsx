@@ -23,8 +23,9 @@ export default function AdminLoginPage() {
     try {
       await login({ email, password });
       toast.success("Successfully logged in!");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to log in. Please check your credentials.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to log in. Please check your credentials.";
+      toast.error(message);
     }
   };
 

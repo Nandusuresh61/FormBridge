@@ -14,6 +14,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { createSurvey } from "@/services/survey/survey.api";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import axios from "axios";
 import {
   User,
   Mail,
@@ -57,8 +58,12 @@ export const SurveyForm = () => {
       await createSurvey(combinedData);
       toast.success("Survey submitted successfully!");
       setIsSubmitted(true);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to submit survey. Please try again.");
+    } catch (error) {
+      let errorMessage = "Failed to submit survey. Please try again.";
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      toast.error(errorMessage);
       recaptchaRef.current?.reset();
       setRecaptchaToken("");
     }
@@ -190,7 +195,12 @@ export const SurveyForm = () => {
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              <form
+                onSubmit={(e) => {
+                  handleSubmit(onSubmit)(e);
+                }}
+                className="space-y-8"
+              >
 
                 {/* ── Section 01: Personal Identity ── */}
                 <div className="space-y-5">
@@ -404,8 +414,8 @@ export const SurveyForm = () => {
                         <ReCAPTCHA
                           ref={recaptchaRef}
                           sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                          onChange={(token: any) => {
-                            setRecaptchaToken(token);
+                          onChange={(token: string | null) => {
+                            setRecaptchaToken(token || "");
                           }}
                           theme="dark"
                         />
