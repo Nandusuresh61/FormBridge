@@ -1,4 +1,4 @@
-import { ICreateSurveyUseCase } from "../../application/interfaces/ICreateSurveyUseCase";
+import { ICreateSurveyUseCase } from "../../application/interfaces/usecase/ICreateSurveyUseCase";
 import { HttpStatusCode } from "../../shared/enums/StatusCode";
 import { AppMessages } from "../../shared/messages/AppMessages";
 import { ResponseHandler } from "../../shared/response/ResponseHandler";

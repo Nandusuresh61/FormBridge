@@ -8,4 +8,4 @@ if (!parsed.success) {
   process.exit(1);
 }
 
-export const Appconfig = parsed.data;
+export const Appconfig = parsed.data!;
