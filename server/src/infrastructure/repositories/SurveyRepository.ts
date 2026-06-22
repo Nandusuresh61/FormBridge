@@ -1,5 +1,5 @@
 import { Survey } from "../../domain/entities/Survey";
-import { ISurveyRepository } from "../../domain/repository/ISurveyRepository";
+import { ISurveyRepository, SurveyQueryOptions, PaginatedSurveys } from "../../domain/repository/ISurveyRepository";
 import { SurveyModel } from "../database/models/SurveyModel";
 
 export class SurveyRepository implements ISurveyRepository {
@@ -30,10 +30,49 @@ export class SurveyRepository implements ISurveyRepository {
     );
   }
 
-  async findAll(): Promise<Survey[]> {
-    const surveys = await SurveyModel.find().lean();
+  async findAll(options: SurveyQueryOptions = {}): Promise<PaginatedSurveys> {
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      gender = "",
+      nationality = "",
+      sortBy = "createdAt",
+      sortOrder = "desc",
+    } = options;
 
-    return surveys.map(
+    const query: any = {};
+
+    if (search) {
+      const searchRegex = new RegExp(search, "i");
+      query.$or = [
+        { name: searchRegex },
+        { email: searchRegex },
+        { phoneNumber: searchRegex },
+        { address: searchRegex },
+        { message: searchRegex },
+      ];
+    }
+
+    if (gender) {
+      query.gender = gender;
+    }
+
+    if (nationality) {
+      query.nationality = nationality;
+    }
+
+    const skip = (page - 1) * limit;
+
+    const sort: any = {};
+    sort[sortBy] = sortOrder === "asc" ? 1 : -1;
+
+    const [surveys, total] = await Promise.all([
+      SurveyModel.find(query).sort(sort).skip(skip).limit(limit).lean(),
+      SurveyModel.countDocuments(query),
+    ]);
+
+    const mappedSurveys = surveys.map(
       (survey) =>
         new Survey(
           survey.surveyId,
@@ -48,6 +87,11 @@ export class SurveyRepository implements ISurveyRepository {
           survey.createdAt,
         ),
     );
+
+    return {
+      surveys: mappedSurveys,
+      total,
+    };
   }
 
   async findById(surveyId: string): Promise<Survey | null> {

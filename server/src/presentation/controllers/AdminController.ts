@@ -57,7 +57,23 @@ export class AdminController {
 
   getRecentSubmissions = asyncHandler(
     async (req: Request, res: Response): Promise<void> => {
-      const submissions = await this._getRecentSubmissionsUseCase.execute();
+      const page = typeof req.query.page === "string" ? parseInt(req.query.page, 10) : undefined;
+      const limit = typeof req.query.limit === "string" ? parseInt(req.query.limit, 10) : undefined;
+      const search = typeof req.query.search === "string" ? req.query.search : undefined;
+      const gender = typeof req.query.gender === "string" ? req.query.gender : undefined;
+      const nationality = typeof req.query.nationality === "string" ? req.query.nationality : undefined;
+      const sortBy = typeof req.query.sortBy === "string" ? req.query.sortBy : undefined;
+      const sortOrder = (req.query.sortOrder === "asc" || req.query.sortOrder === "desc") ? req.query.sortOrder : undefined;
+
+      const submissions = await this._getRecentSubmissionsUseCase.execute({
+        page: page && !isNaN(page) ? page : undefined,
+        limit: limit && !isNaN(limit) ? limit : undefined,
+        search,
+        gender,
+        nationality,
+        sortBy,
+        sortOrder,
+      });
 
       ResponseHandler.success(res, {
         statusCode: HttpStatusCode.OK,

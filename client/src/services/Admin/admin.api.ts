@@ -1,5 +1,5 @@
 import { API } from "../Api";
-import type { LoginResponse, LogoutResponse, CheckAdminResponse } from "../../types/admin.types";
+import type { LoginResponse, LogoutResponse, CheckAdminResponse, SubmissionsResponse } from "../../types/admin.types";
 
 export interface AdminCredentials {
   email: string;
@@ -21,4 +21,18 @@ export const adminApi = {
     const response = await API.get<CheckAdminResponse>("/admin/me");
     return response.data;
   },
+
+  getSubmissions: async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    gender?: string;
+    nationality?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+  }): Promise<SubmissionsResponse> => {
+    const response = await API.get<SubmissionsResponse>("/admin/submissions", { params });
+    return response.data;
+  },
 };
+
