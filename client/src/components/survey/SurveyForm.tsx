@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import ReCAPTCHA from "react-google-recaptcha";
 import { createSurvey } from "@/services/survey/survey.api";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   User,
@@ -29,6 +29,7 @@ import {
 import { countries, phonePrefixes } from "@/data/countryData";
 
 export const SurveyForm = () => {
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [recaptchaToken, setRecaptchaToken] = useState("");
   const [phonePrefix, setPhonePrefix] = useState("+91");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -58,6 +59,8 @@ export const SurveyForm = () => {
       setIsSubmitted(true);
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Failed to submit survey. Please try again.");
+      recaptchaRef.current?.reset();
+      setRecaptchaToken("");
     }
   };
 
@@ -178,6 +181,7 @@ export const SurveyForm = () => {
                   onClick={() => {
                     setIsSubmitted(false);
                     setRecaptchaToken("");
+                    recaptchaRef.current?.reset();
                     reset();
                   }}
                   className="bg-gradient-to-r from-[#22C55E] to-[#10B981] hover:from-[#16a34a] hover:to-[#059669] text-[#0A0A0A] font-semibold px-6 py-2.5 rounded-xl shadow-lg shadow-[#22C55E]/20 hover:shadow-[#22C55E]/30 transition-all duration-300 border-0"
@@ -398,6 +402,7 @@ export const SurveyForm = () => {
                     <div className="sm:col-span-2 pt-2">
                       <div className="border border-[#2a2a2a] rounded-xl p-4 flex justify-center bg-[#161616] backdrop-blur-sm">
                         <ReCAPTCHA
+                          ref={recaptchaRef}
                           sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
                           onChange={(token: any) => {
                             setRecaptchaToken(token);

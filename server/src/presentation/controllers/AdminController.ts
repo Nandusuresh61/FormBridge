@@ -66,4 +66,19 @@ export class AdminController {
       });
     }
   );
+
+  me = asyncHandler(
+    async (req: Request, res: Response): Promise<void> => {
+      ResponseHandler.success(res, {
+        statusCode: HttpStatusCode.OK,
+        message: AppMessages.ADMIN_SESSION_VALID,
+        data: {
+          admin: {
+            adminId: req.admin.adminId,
+            email: req.admin.email,
+          },
+        },
+      });
+    }
+  );
 }

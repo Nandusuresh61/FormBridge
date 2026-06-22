@@ -6,5 +6,8 @@ export const AppMessages = {
     PHONE_EXISTS: "A survey response with this phone number has already been submitted.",
     ADMIN_LOGIN_SUCCESS: "Login successful",
     ADMIN_LOGOUT_SUCCESS: "Logout successful",
-    SUBMISSIONS_RETRIEVED: "Submissions retrieved successfully"
+    SUBMISSIONS_RETRIEVED: "Submissions retrieved successfully",
+    ADMIN_NOT_FOUND: "Admin account not found with this email",
+    INCORRECT_PASSWORD: "Incorrect password",
+    ADMIN_SESSION_VALID: "Admin session is valid"
 }

@@ -1,16 +1,43 @@
-import { useState } from "react";
-import { Lock, Mail, Shield } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Lock, Mail, Shield, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAdminStore } from "../store/adminStore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login, isAuthenticated, isLoading } = useAdminStore();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // No functionality yet — placeholder
+    try {
+      await login({ email, password });
+      toast.success("Successfully logged in!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to log in. Please check your credentials.");
+    }
   };
+
+  if (isLoading && !email && !password) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-t-2"
+          style={{ borderColor: "oklch(0.72 0.19 145) transparent transparent transparent" }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
@@ -112,7 +139,8 @@ export default function AdminLoginPage() {
             <Button
               id="admin-login-btn"
               type="submit"
-              className="w-full font-semibold mt-1 cursor-pointer"
+              disabled={isLoading}
+              className="w-full font-semibold mt-1 cursor-pointer flex items-center justify-center gap-2"
               style={{
                 background: "oklch(0.72 0.19 145)",
                 color: "oklch(0.07 0 0)",
@@ -128,7 +156,14 @@ export default function AdminLoginPage() {
                   "0 0 16px oklch(0.72 0.19 145 / 0.35)")
               }
             >
-              Sign In
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
         </div>
